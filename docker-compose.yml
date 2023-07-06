@@ -1,0 +1,12 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:15.3
+    container_name: pg-nestjs-db
+    environment:
+      - POSTGRES_DB="${POSTGRES_DATABASE}"
+      - POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
+    volumes:
+      - ./pg-database:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:5432"
