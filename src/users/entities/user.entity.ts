@@ -1,4 +1,11 @@
-import { Entity, Column, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  Generated,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -13,14 +20,12 @@ export class User {
     type: 'varchar',
     length: 250,
     unique: true,
-    nullable: true,
   })
   username: string;
 
   @Column({
     type: 'varchar',
     length: 250,
-    nullable: true,
   })
   password: string;
 
@@ -28,7 +33,6 @@ export class User {
     type: 'varchar',
     length: 250,
     unique: true,
-    nullable: true,
   })
   email: string;
 
@@ -42,4 +46,13 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ default: false })
+  status: boolean;
+
+  @CreateDateColumn()
+  createAt: Date;
+
+  @UpdateDateColumn()
+  updateAt: Date;
 }

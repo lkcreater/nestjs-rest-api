@@ -10,10 +10,26 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponseDetail } from 'src/@constants/api-reponse-options.constant';
 
-@Controller('users')
+//-- instant variable --//
+const CONTROLLER_NAME = 'users';
+
+@ApiHeader({
+  name: 'X-MyHeader',
+  description: 'Custom header',
+})
+@ApiTags(CONTROLLER_NAME)
+@Controller(CONTROLLER_NAME)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Post('/sign-up')
+  @ApiResponse(ApiResponseDetail(201))
+  async getSignUp(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.actionSignUp(createUserDto);
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
