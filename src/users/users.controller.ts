@@ -1,22 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDetail } from '../@constants/api-reponse-options.constant';
-import { interResponceApi } from 'src/@types';
+import { interDecoratorLogger, interResponceApi } from 'src/@types';
 import { User } from './entities/user.entity';
 import { LoggerService } from 'src/logger/logger.service';
+import { Logge } from 'src/logger/logger.decorator';
 
 //-- instant variable
 const CONTROLLER_NAME = 'users';
@@ -28,11 +17,6 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly logger: LoggerService,
   ) {}
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return 'this.usersService.create(createUserDto)';
-  }
 
   @Get()
   @ApiResponse(ApiResponseDetail(200))
@@ -47,6 +31,7 @@ export class UsersController {
 
   @Get(':uuid_token')
   async findOne(
+    @Logge() log: interDecoratorLogger,
     @Param('uuid_token') uuid_token: string,
   ): Promise<interResponceApi<User>> {
     try {
@@ -56,18 +41,11 @@ export class UsersController {
         data: data,
       };
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error, {
+        origin: log,
+        data: [error],
+      });
       throw new NotFoundException();
     }
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return 'this.usersService.update(+id, updateUserDto)';
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return 'this.usersService.remove(+id)';
   }
 }
