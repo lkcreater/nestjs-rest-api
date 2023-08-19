@@ -4,13 +4,11 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-//====== LOAD ALL ENTITY ======//
-import { User } from './users/entities/user.entity';
-
 //====== LOAD ALL MODULES ======//
 import { UsersModule } from './users/users.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
 import { AuthModule } from './auth/auth.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -35,6 +33,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     UserProfileModule,
     AuthModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

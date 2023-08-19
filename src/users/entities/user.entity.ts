@@ -16,7 +16,7 @@ export class User {
   id: number;
 
   @Column({
-    name: 'uuid_token'
+    name: 'uuid_token',
   })
   @Generated('uuid')
   uuid_token: string;
@@ -49,9 +49,9 @@ export class User {
   })
   token: string;
 
-  @Column({ 
-    name: 'is_active', 
-    default: true 
+  @Column({
+    name: 'is_active',
+    default: true,
   })
   is_active: boolean;
 
@@ -59,22 +59,26 @@ export class User {
   status: boolean;
 
   @CreateDateColumn({
-    name: 'create_at'
+    name: 'create_at',
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   create_at: Date;
 
   @UpdateDateColumn({
-    name: 'update_at'
+    name: 'update_at',
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   update_at: Date;
 
   //-- join table --------------------------------
-  @OneToOne(() => UserProfile, (userProfile) => userProfile.user, { 
-    createForeignKeyConstraints:false 
+  @OneToOne(() => UserProfile, (userProfile) => userProfile.user, {
+    createForeignKeyConstraints: false,
   })
   @JoinColumn({
     name: 'id',
-    referencedColumnName: 'uid'
+    referencedColumnName: 'uid',
   })
   userProfile: UserProfile;
 }

@@ -1,10 +1,8 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-//-- Entity --
+//-- IMPORT ENTITY
 import { User } from './entities/user.entity';
 import { UserProfile } from 'src/user-profile/entities/user-profile.entity';
 
@@ -12,37 +10,62 @@ import { UserProfile } from 'src/user-profile/entities/user-profile.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
-    @InjectRepository(UserProfile) private profileRepo: Repository<UserProfile>
+    @InjectRepository(UserProfile) private profileRepo: Repository<UserProfile>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
   async findAll(): Promise<[User[], number]> {
-    const attribs = ['uuid_token', 'username', 'email', 'is_active', 'status', 'create_at', 'update_at'];
-    let selected = attribs.map(attr => `u.${attr}`);
+    const attribs = [
+      'uuid_token',
+      'username',
+      'email',
+      'is_active',
+      'status',
+      'create_at',
+      'update_at',
+    ];
+    const selected = attribs.map((attr) => `u.${attr}`);
     const query = this.userRepo
-              .createQueryBuilder('u')
-              .select(selected)
-              .leftJoin('u.userProfile', 'prof')
-              .addSelect([
-                'prof.first_name',
-                'prof.last_name',
-                'prof.phone',
-              ]);
+      .createQueryBuilder('u')
+      .select(selected)
+      .leftJoin('u.userProfile', 'prof')
+      .addSelect(['prof.first_name', 'prof.last_name', 'prof.phone'])
+      .where('u.is_active = :isActive', {
+        isActive: true,
+      });
     return await query.getManyAndCount();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOneByToken(token: string): Promise<User> {
+    const model = await this.userRepo
+      .createQueryBuilder('u')
+      .where('u.is_active = :isActive AND u.uuid_token = :token', {
+        token: token,
+        isActive: true,
+      })
+      .getOne();
+
+    return this.compareModelUser(model);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOne(id: number): Promise<User> {
+    const model = await this.userRepo
+      .createQueryBuilder('u')
+      .where('u.is_active = :isActive AND u.id = :id', {
+        id: id,
+        isActive: true,
+      })
+      .getOne();
+
+    return this.compareModelUser(model);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  compareModelUser(model: User) {
+    delete model.id;
+    delete model.password;
+    delete model.token;
+    return {
+      ...model,
+      userProfile: model.userProfile,
+    };
   }
 }
