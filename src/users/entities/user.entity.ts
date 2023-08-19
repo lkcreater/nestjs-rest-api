@@ -1,3 +1,4 @@
+import { UserProfile } from 'src/user-profile/entities/user-profile.entity';
 import {
   Entity,
   Column,
@@ -5,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -12,9 +15,11 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    name: 'uuid_token'
+  })
   @Generated('uuid')
-  uuidToken: string;
+  uuid_token: string;
 
   @Column({
     type: 'varchar',
@@ -44,15 +49,32 @@ export class User {
   })
   token: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({ 
+    name: 'is_active', 
+    default: true 
+  })
+  is_active: boolean;
 
   @Column({ default: false })
   status: boolean;
 
-  @CreateDateColumn()
-  createAt: Date;
+  @CreateDateColumn({
+    name: 'create_at'
+  })
+  create_at: Date;
 
-  @UpdateDateColumn()
-  updateAt: Date;
+  @UpdateDateColumn({
+    name: 'update_at'
+  })
+  update_at: Date;
+
+  //-- join table --------------------------------
+  @OneToOne(() => UserProfile, (userProfile) => userProfile.user, { 
+    createForeignKeyConstraints:false 
+  })
+  @JoinColumn({
+    name: 'id',
+    referencedColumnName: 'uid'
+  })
+  userProfile: UserProfile;
 }

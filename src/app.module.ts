@@ -9,6 +9,8 @@ import { User } from './users/entities/user.entity';
 
 //====== LOAD ALL MODULES ======//
 import { UsersModule } from './users/users.module';
+import { UserProfileModule } from './user-profile/user-profile.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { UsersModule } from './users/users.module';
       }),
     }),
     UsersModule,
+    UserProfileModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
