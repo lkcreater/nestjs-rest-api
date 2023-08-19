@@ -13,4 +13,3 @@ import { Logger } from 'src/logger/entities/logger.entity';
   providers: [UsersService, LoggerService],
 })
 export class UsersModule {}
-
