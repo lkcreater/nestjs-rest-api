@@ -23,7 +23,12 @@ export class LoggerService {
     this.logger.error(error);
   }
 
-  async addLogger(options: interLogger<any>) {
+  async log<T>(log: any, options: interLogger<T>) {
+    await this.addLogger(options);
+    this.logger.log(log);
+  }
+
+  private async addLogger(options: interLogger<any>) {
     try {
       if (this.enable) {
         const logType = options.type ? options.type : options.origin.path;

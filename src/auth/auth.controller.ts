@@ -4,6 +4,8 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SignupAuthDto } from './dto/signup-auth.dto';
 import { ApiResponseDetail } from 'src/@constants/api-reponse-options.constant';
 import { SignInAuthDto } from './dto/signin-auth.dto';
+import { Logge } from 'src/logger/logger.decorator';
+import { interDecoratorLogger, interLogger } from 'src/@types';
 
 //-- instant variable --//
 const CONTROLLER_NAME = 'auth';
@@ -15,13 +17,19 @@ export class AuthController {
 
   @Post('sign-up')
   @ApiResponse(ApiResponseDetail(201))
-  actionSignUp(@Body() signupAuthDto: SignupAuthDto) {
-    return this.authService.actionSignUp(signupAuthDto);
+  actionSignUp(
+    @Logge() origin: interDecoratorLogger,
+    @Body() signupAuthDto: SignupAuthDto,
+  ) {
+    return this.authService.actionSignUp(origin, signupAuthDto);
   }
 
   @Post('sign-in')
   @ApiResponse(ApiResponseDetail(201))
-  actionSignIn(@Body() signIn: SignInAuthDto) {
-    return this.authService.actionSignIn(signIn);
+  actionSignIn(
+    @Logge() origin: interDecoratorLogger,
+    @Body() signIn: SignInAuthDto,
+  ) {
+    return this.authService.actionSignIn(origin, signIn);
   }
 }
