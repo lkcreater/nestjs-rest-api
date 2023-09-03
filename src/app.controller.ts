@@ -19,7 +19,7 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.configService.get<string>('ENV_FILE');
-    //return this.appService.getHello();
+    return this.appService.getHello();
   }
 
   @Get('/test')
