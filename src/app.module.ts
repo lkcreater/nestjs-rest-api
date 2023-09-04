@@ -10,6 +10,7 @@ import { UserProfileModule } from './user-profile/user-profile.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
 import { RolesModule } from './roles/roles.module';
+import { FoodPosModule } from './food-pos/food-pos.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RolesModule } from './roles/roles.module';
     AuthModule,
     LoggerModule,
     RolesModule,
+    FoodPosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
